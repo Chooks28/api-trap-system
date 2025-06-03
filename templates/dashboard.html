@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trap Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #222; }
+        table { border-collapse: collapse; width: 60%; }
+        th, td { padding: 8px 12px; border: 1px solid #aaa; }
+        th { background-color: #eee; }
+        .buttons { margin-top: 20px; }
+        button { padding: 10px 20px; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Suspicious IP Dashboard</h1>
+    <table>
+        <tr><th>IP Address</th><th># of Trap Hits</th></tr>
+        {% for ip, count in hits.items() %}
+        <tr><td>{{ ip }}</td><td>{{ count }}</td></tr>
+        {% endfor %}
+    </table>
+
+    <div class="buttons">
+        <form method="post" action="/reset" style="display:inline;">
+            <button type="submit">Reset Log</button>
+        </form>
+        <form method="get" action="/export" style="display:inline;">
+            <button type="submit">Export Log</button>
+        </form>
+    </div>
+</body>
+</html>
