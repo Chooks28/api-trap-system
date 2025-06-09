@@ -1,0 +1,12 @@
+127.0.0.1 was redirected from main_server.py at endpoint /api/data
+127.0.0.1 was redirected from main_server.py at endpoint /api/data
+127.0.0.1 was redirected from main_server.py at endpoint /api/data
+127.0.0.1 was redirected from main_server.py at endpoint /api/data
+127.0.0.1 was redirected from main_server.py at endpoint /api/data
+127.0.0.1 was redirected from main_server.py at endpoint /api/data
+127.0.0.1 was redirected from main_server.py at endpoint /api/data
+127.0.0.1 was redirected from main_server.py at endpoint /api/data
+127.0.0.1 was redirected from main_server.py at endpoint /api/data
+127.0.0.1 hit the trap with GET /trap
+127.0.0.1 hit the trap with GET /trap
+127.0.0.1 hit the trap with GET /trap

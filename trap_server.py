@@ -1,27 +1,48 @@
 from flask import Flask, request, render_template, send_file, redirect, url_for
-from collections import defaultdict
 import os
 
 app = Flask(__name__)
-trap_hits = defaultdict(int)
 LOG_FILE = "trap_log.txt"
 
 @app.route('/trap', methods=['GET', 'POST'])
 def trap():
     ip = request.remote_addr
-    trap_hits[ip] += 1
     with open(LOG_FILE, "a") as log:
         log.write(f"{ip} hit the trap with {request.method} {request.path}\n")
     return {"status": "fake", "data": "Here is some fake data. 😈"}
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template("dashboard.html", hits=dict(trap_hits))
+    redirects = {}
+    trap_hits = {}
+
+    try:
+        with open(LOG_FILE, "r") as log:
+            for line in log:
+                parts = line.split()
+                if len(parts) >= 1:
+                    ip = parts[0]
+                    if "redirected" in line:
+                        redirects[ip] = redirects.get(ip, 0) + 1
+                    elif "hit the trap" in line:
+                        trap_hits[ip] = trap_hits.get(ip, 0) + 1
+    except FileNotFoundError:
+        pass
+
+    all_ips = set(redirects.keys()) | set(trap_hits.keys())
+    combined_stats = {
+        ip: {
+            "redirects": redirects.get(ip, 0),
+            "trap_hits": trap_hits.get(ip, 0)
+        }
+        for ip in all_ips
+    }
+
+    return render_template("dashboard.html", hits=combined_stats)
 
 @app.route('/reset', methods=['POST'])
 def reset():
-    trap_hits.clear()
-    open(LOG_FILE, 'w').close()  # clear log file
+    open(LOG_FILE, 'w').close()
     return redirect(url_for('dashboard'))
 
 @app.route('/export')
@@ -30,3 +51,4 @@ def export():
 
 if __name__ == "__main__":
     app.run(port=5001)
+
