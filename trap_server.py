@@ -1,8 +1,13 @@
-from flask import Flask, request, render_template, send_file, redirect, url_for
+from flask import Flask, request, render_template, send_file, redirect, url_for, jsonify
 import os
 
 app = Flask(__name__)
 LOG_FILE = "trap_log.txt"
+
+USER_DB = {
+    "alice": "password123",
+    "bob": "secure456"
+}
 
 @app.route('/trap', methods=['GET', 'POST'])
 def trap():
@@ -10,6 +15,17 @@ def trap():
     with open(LOG_FILE, "a") as log:
         log.write(f"{ip} hit the trap with {request.method} {request.path}\n")
     return {"status": "fake", "data": "Here is some fake data. 😈"}
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.json
+    username = data.get("username")
+    password = data.get("password")
+
+    if username in USER_DB and USER_DB[username] == password:
+        return jsonify({"status": "success", "message": "Login successful"})
+    else:
+        return jsonify({"status": "fail", "message": "Invalid credentials"}), 401
 
 @app.route('/dashboard')
 def dashboard():
